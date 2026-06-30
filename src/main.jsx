@@ -1959,12 +1959,12 @@ function App() {
           ))}
         </nav>
         <div className="top-actions">
-          <span className="network">
-            <Sparkles size={16} /> BSC
+          <span className="network" title="BNB Smart Chain">
+            <Sparkles size={16} /> <span>BSC</span>
           </span>
-          <button className="connect" onClick={connectWallet} disabled={busy}>
+          <button className="connect" onClick={connectWallet} disabled={busy} aria-label="连接钱包">
             <Wallet size={16} />
-            {account ? shorten(account) : "连接钱包"}
+            <span>{account ? shorten(account) : "连接钱包"}</span>
           </button>
           <button
             className="mobile-menu-btn"

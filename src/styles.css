@@ -61,6 +61,10 @@
   box-sizing: border-box;
 }
 
+html, body, #root {
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
@@ -3025,17 +3029,20 @@ h3 {
     gap: 8px;
   }
 
-  .network span,
+  .network {
+    display: none;
+  }
+
   .connect span,
   .action span {
     display: none;
   }
 
-  .network,
   .connect,
   .action {
-    padding: 0 12px;
-    min-height: 36px;
+    padding: 0;
+    width: 40px;
+    min-height: 40px;
   }
 
   .hero {
