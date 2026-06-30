@@ -1010,8 +1010,8 @@ function TokenomicsSection({ data, compact = false }) {
       <div className="exchange-tax-grid">
         <div className="tax-panel tax-gold">
           <strong>90%</strong>
-          <h3>黄金分红池</h3>
-          <span>Gold Dividend Pool</span>
+          <h3>税收 → 黄金分红池</h3>
+          <span>90% of Transaction Tax</span>
           <div className="tax-subgrid">
             <div>
               <span>实时分红</span>
@@ -1023,16 +1023,10 @@ function TokenomicsSection({ data, compact = false }) {
             </div>
           </div>
         </div>
-        <div className="tax-panel tax-core">
-          <strong>3%</strong>
-          <h3>买卖税</h3>
-          <span>Transaction Tax</span>
-          <p>交易价值进入协议分配系统，自动连接分红、质押与防守模块。</p>
-        </div>
         <div className="tax-panel tax-defense">
           <strong>10%</strong>
-          <h3>回购防守</h3>
-          <span>Buyback Defense</span>
+          <h3>税收 → 回购防守</h3>
+          <span>10% of Transaction Tax</span>
           <p>单日跌幅触发风控逻辑时，协议回购黄金時代并补充流动性。</p>
         </div>
       </div>
