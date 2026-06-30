@@ -807,7 +807,7 @@ function buildSteps(user, data, parsedStakeAmount, hasStakeAllowance) {
     {
       id: "approvePass",
       title: "授权通行证额度",
-      description: `授权金库燃烧 ${formatFull(data.passBurnAmount, 0)} GoldAge`,
+      description: `授权金库燃烧 ${formatFull(data.passBurnAmount, 0)} 黄金時代`,
       done: passAllowanceEnough,
       current: false,
       actionLabel: "授权通行证",
@@ -823,14 +823,14 @@ function buildSteps(user, data, parsedStakeAmount, hasStakeAllowance) {
     {
       id: "approveStake",
       title: "授权质押额度",
-      description: `授权 ${formatFull(Number(ethers.formatEther(parsedStakeAmount || 0n)), 0)} GoldAge 给金库`,
+      description: `授权 ${formatFull(Number(ethers.formatEther(parsedStakeAmount || 0n)), 0)} 黄金時代给金库`,
       done: hasStakeAllowance,
       current: false,
       actionLabel: "授权质押",
     },
     {
       id: "stake",
-      title: "质押 GoldAge",
+      title: "质押黄金時代",
       description: "存入金库参与 XAUt 分红",
       done: hasStaked,
       current: false,
@@ -926,7 +926,7 @@ function HeroArt({ trend }) {
     <div className="generated-hero-art" aria-hidden="true">
       <div className="hero-frame">
         <div className="hero-frame-top">
-          <span>GOLDAGE VAULT</span>
+          <span>黄金時代 VAULT</span>
           <span>BSC LIVE</span>
         </div>
         <div className="hero-vault-visual">
@@ -954,7 +954,7 @@ function HeroArt({ trend }) {
             <span>MARKET CAP</span>
             <strong>ON-CHAIN</strong>
           </div>
-          <svg viewBox="0 0 240 72" role="img" aria-label="GoldAge on-chain trend">
+          <svg viewBox="0 0 240 72" role="img" aria-label="黄金時代 on-chain trend">
             <path className="ledger-grid" d="M8 18H232M8 36H232M8 54H232" />
             <path className="ledger-area" d={areaD} />
             <path className="ledger-line" d={pathD} />
@@ -1354,7 +1354,7 @@ function App() {
         setQuote({
           mode: "buy",
           out,
-          outputLabel: "GoldAge",
+          outputLabel: "黄金時代",
           effectivePrice: out > 0 ? amountNumber / out : 0,
           noSlippage: data?.price ? amountNumber / data.price : 0,
           slippagePct: data?.price && out > 0 ? (amountNumber / out / data.price - 1) * 100 : 0,
@@ -1420,7 +1420,7 @@ function App() {
         },
         {
           icon: Gem,
-          label: "GoldAge 当前价格",
+          label: "黄金時代当前价格",
           tone: "gold",
           rawValue: data.price,
           formatValue: (v) => `$${Number(v).toFixed(8)}`,
@@ -1511,8 +1511,8 @@ function App() {
       <header className="topbar">
         <a className="brand" href="#/">
           <img className="brand-mark image" src={UI.brand} alt="" />
-          <span>GoldAge</span>
-          <small>Official DApp</small>
+          <span>黄金時代</span>
+          <small>GoldAge · 简译</small>
         </a>
         <nav>
           {ROUTES.map((item) => (
@@ -1550,7 +1550,7 @@ function App() {
         <HeroArt trend={priceHistory} />
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">黄金时代 GoldAge</p>
+            <p className="eyebrow">黄金時代 · GoldAge</p>
             <h1>时间就是黄金</h1>
             <p className="lead">一个“时间换黄金”的加密分红协议。以真实黄金 RWA 为支撑，持有即享黄金分红，质押时间越长权重越高。</p>
             <p className="hero-slogan">日久见金，越持越赢。</p>
@@ -1633,7 +1633,7 @@ function App() {
           <div className="status-tile">
             <span>最低质押</span>
             <strong>{data ? formatFull(data.minimumStakeAmount, 0) : "--"}</strong>
-            <small>GoldAge</small>
+            <small>黄金時代</small>
           </div>
           <div className="status-tile">
             <span>通行证燃烧</span>
@@ -1654,7 +1654,7 @@ function App() {
                 <strong>
                   {user ? (
                     <>
-                      <AnimatedNumber value={user.balance} format={(v) => formatFull(v, 2)} /> GoldAge
+                      <AnimatedNumber value={user.balance} format={(v) => formatFull(v, 2)} /> 黄金時代
                     </>
                   ) : (
                     "连接钱包查看"
@@ -1669,7 +1669,7 @@ function App() {
               <button onClick={() => setStakeAmount(String(Math.floor(user?.balance || data?.minimumStakeAmount || 500000)))}>MAX</button>
             </div>
             <div className="allowance-line">
-              <span>当前授权：{user ? formatFull(user.allowance, 2) : "--"} GoldAge</span>
+              <span>当前授权：{user ? formatFull(user.allowance, 2) : "--"} 黄金時代</span>
               <span>{hasStakeAllowance ? "授权充足" : "需要授权"}</span>
             </div>
 
@@ -1709,7 +1709,7 @@ function App() {
               </div>
             </div>
             <div className="input-row quote-input">
-              <label htmlFor="quoteAmount">{quoteMode === "sell" ? "GoldAge 数量" : "USDT 数量"}</label>
+              <label htmlFor="quoteAmount">{quoteMode === "sell" ? "黄金時代数量" : "USDT 数量"}</label>
               <input id="quoteAmount" value={quoteAmount} onChange={(event) => setQuoteAmount(event.target.value)} inputMode="decimal" />
               <button onClick={() => setQuoteAmount(quoteMode === "sell" ? "5000000" : "100")}>示例</button>
             </div>
@@ -1767,11 +1767,11 @@ function App() {
         <div className="section-head">
           <span>02 / 核心机制</span>
           <h2>一个“时间换黄金”的加密分红协议</h2>
-          <p>黄金时代是一个以真实黄金 RWA 为支撑的去中心化分红协议。用户持有代币即获得黄金分红，质押时间越长权重越高，最高可享 3 倍收益。</p>
+          <p>黄金時代是一个以真实黄金 RWA 为支撑的去中心化分红协议。用户持有代币即获得黄金分红，质押时间越长权重越高，最高可享 3 倍收益。</p>
         </div>
         <div className="story-grid">
           <article className="story-copy">
-            <h3>什么是 GoldAge？</h3>
+            <h3>什么是黄金時代？</h3>
             <p>项目采用 3% 买卖税机制，90% 税收直接购买黄金 RWA 分发给持币者，10% 用于回购护盘。</p>
             <p>通过“实时分红 + 质押复利”双通道，让时间成为每个人最大的杠杆。</p>
             <div className="rule-grid">
@@ -1868,7 +1868,7 @@ function App() {
           </Reveal>
         </div>
         <div className="data-table">
-          <StatCard icon={Gem} label="GoldAge 总供应量" value={data ? formatFull(data.total, 0) : "--"} />
+          <StatCard icon={Gem} label="黄金時代总供应量" value={data ? formatFull(data.total, 0) : "--"} />
           <StatCard icon={Flame} label="黑洞销毁数量" value={data ? formatFull(data.burned, 0) : "--"} />
           <StatCard icon={LockKeyhole} label="Vault 质押数量" value={data ? formatFull(data.totalStaked, 0) : "--"} />
           <StatCard icon={Coins} label="XAUt 当前余额" value={data ? formatFull(data.xautBalance, 6) : "--"} />
@@ -1909,7 +1909,7 @@ function App() {
           </div>
         </div>
         <div className="contracts-grid">
-          <ContractRow name="GoldAge Token" address={ADDRESSES.goldage} />
+          <ContractRow name="黄金時代 Token" address={ADDRESSES.goldage} />
           <ContractRow name="Vault" address={ADDRESSES.vault} />
           <ContractRow name="Factory" address={ADDRESSES.factory} />
           <ContractRow name="XAUt" address={ADDRESSES.xaut} />
@@ -1925,15 +1925,15 @@ function App() {
       <section id="game" className="section portal-section">
         <div className="section-head">
           <span>05 / 游戏生态</span>
-          <h2>GoldAge 游戏</h2>
-          <p>围绕 GoldAge 资产、积分权益与链上身份扩展的游戏化生态入口。</p>
+          <h2>黄金時代游戏</h2>
+          <p>围绕黄金時代资产、积分权益与链上身份扩展的游戏化生态入口。</p>
         </div>
         <div className="portal-grid">
           <div className="portal-panel coming-soon">
             <div className="portal-icon"><Gamepad2 size={34} /></div>
             <span>Coming Soon</span>
             <h3>游戏模块待开发</h3>
-            <p>后续将接入围绕 GoldAge 持有、质押权重与社区任务展开的互动玩法。</p>
+            <p>后续将接入围绕黄金時代持有、质押权重与社区任务展开的互动玩法。</p>
           </div>
           <div className="portal-panel">
             <span>规划方向</span>
@@ -1948,8 +1948,8 @@ function App() {
       <section id="mall" className="section portal-section">
         <div className="section-head">
           <span>06 / 生态商城</span>
-          <h2>GoldAge 商城</h2>
-          <p>面向 GoldAge 社区的权益兑换、生态周边和 RWA 叙事扩展入口。</p>
+          <h2>黄金時代商城</h2>
+          <p>面向黄金時代社区的权益兑换、生态周边和 RWA 叙事扩展入口。</p>
         </div>
         <div className="portal-grid">
           <div className="portal-panel coming-soon">
@@ -1961,7 +1961,7 @@ function App() {
           <div className="portal-panel">
             <span>定位</span>
             <h3>从持有权益到生态消费</h3>
-            <p>商城不会替代链上金库功能，而是作为 GoldAge 生态应用层的补充。</p>
+            <p>商城不会替代链上金库功能，而是作为黄金時代生态应用层的补充。</p>
           </div>
         </div>
       </section>
@@ -1972,7 +1972,7 @@ function App() {
         <div className="section-head">
           <span>07 / 商务合作</span>
           <h2>合作联系</h2>
-          <p>欢迎社区、媒体、RWA 资源、交易生态和商务渠道与 GoldAge 官方团队联系。</p>
+          <p>欢迎社区、媒体、RWA 资源、交易生态和商务渠道与黄金時代官方团队联系。</p>
         </div>
         <div className="contact-grid">
           <a className="contact-card" href="https://x.com/Flaphjsd" target="_blank" rel="noreferrer">
@@ -1995,7 +1995,7 @@ function App() {
           <a className="contact-card" href="https://m.debox.pro/group?id=w6aehsyg&code=kvouocdd" target="_blank" rel="noreferrer">
             <Sparkles size={24} />
             <span>DeBox</span>
-            <strong>GoldAge 社区</strong>
+            <strong>黄金時代社区</strong>
             <ArrowUpRight size={18} />
           </a>
           <a className="contact-card featured foundation-card" href={`${EXPLORER}0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8`} target="_blank" rel="noreferrer">
@@ -2015,7 +2015,7 @@ function App() {
       ) : null}
 
       <footer>
-        <span className="brand mini"><img className="brand-mark image" src={UI.brand} alt="" /> GoldAge</span>
+        <span className="brand mini"><img className="brand-mark image" src={UI.brand} alt="" /> 黄金時代 <small>GoldAge</small></span>
         <span>日久见金，越持越赢 · Built on BNB Smart Chain</span>
       </footer>
 
