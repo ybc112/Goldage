@@ -2389,6 +2389,7 @@ function App() {
           <ContractRow name="Factory" address={ADDRESSES.factory} />
           <ContractRow name="XAUt" address={ADDRESSES.xaut} />
           <ContractRow name="USDT" address={ADDRESSES.usdt} />
+          <ContractRow name="WBNB" address={ADDRESSES.wbnb} />
           <ContractRow name="Pancake Pair" address={ADDRESSES.pair} />
           <ContractRow name="Realtime Tracker" address={data?.tracker || ADDRESSES.vault} />
           <ContractRow name="Pancake Router" address={ADDRESSES.router} />
