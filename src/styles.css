@@ -2931,14 +2931,94 @@ h3 {
   }
 }
 
+.mobile-menu-btn {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .topbar {
     grid-template-columns: 1fr auto;
     min-height: 64px;
+    padding: 12px 14px;
+  }
+
+  .brand {
+    font-size: 17px;
+    gap: 8px;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .brand-mark,
+  .brand-mark.image {
+    width: 34px;
+    height: 34px;
   }
 
   .topbar nav {
-    display: none;
+    position: fixed;
+    inset: 64px 12px auto 12px;
+    z-index: 49;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: auto;
+    margin: 0;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(11, 14, 17, 0.98);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.48);
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  .topbar nav.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .topbar nav a {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    color: var(--text-0);
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+
+  .mobile-menu-btn:hover {
+    border-color: var(--border-gold);
+    background: var(--bg-3);
+  }
+
+  .mobile-menu-backdrop {
+    position: fixed;
+    inset: 64px 0 0 0;
+    z-index: 48;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
   }
 
   .top-actions {
@@ -3039,6 +3119,30 @@ h3 {
 
   .tag.left { top: 90px; left: 20px; }
   .tag.right { top: 90px; right: 20px; }
+
+  .gold-ladder {
+    gap: 10px;
+  }
+
+  .ladder-step {
+    padding: 18px 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .ladder-step span {
+    font-size: 12px;
+  }
+
+  .ladder-step strong {
+    font-size: 24px;
+  }
+
+  .ladder-step small {
+    display: none;
+  }
 
   .footer-bottom {
     flex-direction: column;

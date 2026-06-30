@@ -18,6 +18,7 @@ import {
   Landmark,
   Loader2,
   LockKeyhole,
+  Menu,
   RefreshCw,
   ShieldCheck,
   ShoppingBag,
@@ -1438,6 +1439,7 @@ function App() {
   const [txHash, setTxHash] = useState("");
   const [route, setRoute] = useState(getRouteFromHash);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // 图表与市场数据
   const [priceHistory, setPriceHistory] = useState(null);
@@ -1932,6 +1934,7 @@ function App() {
 
   function navigate(id) {
     const next = ROUTES.find((item) => item.id === id)?.hash || "#/";
+    setMenuOpen(false);
     if (window.location.hash === next) {
       setRoute(id);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1948,9 +1951,9 @@ function App() {
           <span>黄金時代 GoldAge</span>
           <small>RWA Gold Dividend Protocol</small>
         </a>
-        <nav>
+        <nav className={menuOpen ? "open" : ""}>
           {NAV_ITEMS.map((item) => (
-            <a key={item.id} className={route === item.id ? "active" : ""} href={item.hash}>
+            <a key={item.id} className={route === item.id ? "active" : ""} href={item.hash} onClick={() => setMenuOpen(false)}>
               {item.label}
             </a>
           ))}
@@ -1963,7 +1966,16 @@ function App() {
             <Wallet size={16} />
             {account ? shorten(account) : "连接钱包"}
           </button>
+          <button
+            className="mobile-menu-btn"
+            aria-label={menuOpen ? "关闭菜单" : "打开菜单"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
+        {menuOpen ? <div className="mobile-menu-backdrop" onClick={() => setMenuOpen(false)} /> : null}
       </header>
 
       {route !== "home" ? (
