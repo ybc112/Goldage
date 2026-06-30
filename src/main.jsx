@@ -11,15 +11,19 @@ import {
   Coins,
   Copy,
   Flame,
+  Gamepad2,
   Gem,
+  Handshake,
   Info,
   Landmark,
   Loader2,
   LockKeyhole,
   RefreshCw,
   ShieldCheck,
+  ShoppingBag,
   Sparkles,
   TrendingUp,
+  Users,
   Wallet,
   X,
   Zap,
@@ -55,6 +59,9 @@ const ROUTES = [
   { id: "mechanism", label: "机制", hash: "#/mechanism" },
   { id: "data", label: "数据", hash: "#/data" },
   { id: "contracts", label: "合约", hash: "#/contracts" },
+  { id: "game", label: "游戏", hash: "#/game" },
+  { id: "mall", label: "商城", hash: "#/mall" },
+  { id: "cooperation", label: "商务合作", hash: "#/cooperation" },
 ];
 
 const UI = {
@@ -1545,9 +1552,10 @@ function App() {
         <HeroArt trend={priceHistory} />
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">GoldAge · RWA Dividend Protocol</p>
+            <p className="eyebrow">黄金时代 GoldAge</p>
             <h1>时间就是黄金</h1>
-            <p className="lead">以黄金资产为核心，以链上透明机制为基础，打造持有即分、质押增权、回购防守的长期价值协议。</p>
+            <p className="lead">一个“时间换黄金”的加密分红协议。以真实黄金 RWA 为支撑，持有即享黄金分红，质押时间越长权重越高。</p>
+            <p className="hero-slogan">日久见金，越持越赢。</p>
             <div className="hero-proof-row">
               <span><Zap size={15} /> <strong>3%</strong> 买卖税</span>
               <span><Gem size={15} /> <strong>90%</strong> 黄金分红</span>
@@ -1558,9 +1566,9 @@ function App() {
                 <LockKeyhole size={18} />
                 立即质押
               </button>
-              <button className="action" onClick={() => navigate("mechanism")}>
-                <BookOpen size={18} />
-                查看机制
+              <button className="action" onClick={() => navigate("cooperation")}>
+                <Handshake size={18} />
+                商务合作
               </button>
             </div>
             <div className="hero-live-strip">
@@ -1603,8 +1611,8 @@ function App() {
             <ActionButton icon={BarChart3} onClick={() => navigate("data")}>
               查看数据
             </ActionButton>
-            <ActionButton icon={BookOpen} onClick={() => navigate("contracts")}>
-              查看合约
+            <ActionButton icon={BookOpen} onClick={() => navigate("mechanism")}>
+              协议介绍
             </ActionButton>
           </div>
         </div>
@@ -1760,18 +1768,19 @@ function App() {
       <section id="mechanism" className="section mechanism">
         <div className="section-head">
           <span>02 / 核心机制</span>
-          <h2>黄金叙事、质押分红、回购防守</h2>
-          <p>以 GoldAge 作为金库入口，围绕 XAUt 分红、质押权重、价格参考与回购池构建可验证的链上机制。</p>
+          <h2>一个“时间换黄金”的加密分红协议</h2>
+          <p>黄金时代是一个以真实黄金 RWA 为支撑的去中心化分红协议。用户持有代币即获得黄金分红，质押时间越长权重越高，最高可享 3 倍收益。</p>
         </div>
         <div className="story-grid">
           <article className="story-copy">
             <h3>什么是 GoldAge？</h3>
-            <p>GoldAge 把黄金资产叙事、XAUt 分红、链上质押和价格防守组合在一起。用户通过 GoldAge 进入金库，链上数据实时透明展示。</p>
+            <p>项目采用 3% 买卖税机制，90% 税收直接购买黄金 RWA 分发给持币者，10% 用于回购护盘。</p>
+            <p>通过“实时分红 + 质押复利”双通道，让时间成为每个人最大的杠杆。</p>
             <div className="rule-grid">
-              <span>通行证燃烧 {data ? formatFull(data.passBurnAmount, 0) : "--"}</span>
+              <span>理念：时间就是黄金</span>
+              <span>Slogan：日久见金，越持越赢</span>
+              <span>最高权重 3 倍收益</span>
               <span>最低质押 {data ? formatFull(data.minimumStakeAmount, 0) : "--"}</span>
-              <span>早解罚金 {data ? `${data.earlyUnlockPenaltyBps / 100}%` : "--"}</span>
-              <span>防守阈值 {data ? `${data.defenseTriggerDropBps / 100}%` : "--"}</span>
             </div>
           </article>
           <div className="visual-panel">
@@ -1786,10 +1795,10 @@ function App() {
           </div>
         </div>
         <div className="mechanism-cards">
-          <Reveal delay={0}><StatCard icon={Gem} label="GoldAge Token" value="质押与生态入口" sub="Token / Stake" /></Reveal>
-          <Reveal delay={80}><StatCard icon={Landmark} label="黄金金库 Vault" value="链上质押金库" sub="Vault / Dividend" /></Reveal>
-          <Reveal delay={160}><StatCard icon={Coins} label="XAUt 分红" value="实时与质押分红" sub="XAUt / BSC" /></Reveal>
-          <Reveal delay={240}><StatCard icon={ShieldCheck} label="回购防守机制" value="价格触发回购" sub="Buyback / LP" /></Reveal>
+          <Reveal delay={0}><StatCard icon={Zap} label="3% 买卖税" value="协议价值入口" sub="Buy / Sell Tax" /></Reveal>
+          <Reveal delay={80}><StatCard icon={Gem} label="90% 黄金分红" value="持有即分" sub="RWA Dividend" /></Reveal>
+          <Reveal delay={160}><StatCard icon={LockKeyhole} label="质押复利" value="最高 3 倍权重" sub="Time Weighted" /></Reveal>
+          <Reveal delay={240}><StatCard icon={ShieldCheck} label="10% 回购防守" value="价格护盘机制" sub="Buyback Defense" /></Reveal>
         </div>
       </section>
       ) : null}
@@ -1914,9 +1923,96 @@ function App() {
       </section>
       ) : null}
 
+      {route === "game" ? (
+      <section id="game" className="section portal-section">
+        <div className="section-head">
+          <span>05 / 游戏生态</span>
+          <h2>GoldAge 游戏</h2>
+          <p>围绕 GoldAge 资产、积分权益与链上身份扩展的游戏化生态入口。</p>
+        </div>
+        <div className="portal-grid">
+          <div className="portal-panel coming-soon">
+            <div className="portal-icon"><Gamepad2 size={34} /></div>
+            <span>Coming Soon</span>
+            <h3>游戏模块待开发</h3>
+            <p>后续将接入围绕 GoldAge 持有、质押权重与社区任务展开的互动玩法。</p>
+          </div>
+          <div className="portal-panel">
+            <span>规划方向</span>
+            <h3>时间、权重、奖励</h3>
+            <p>游戏生态将优先保持链上资产安全和可验证性，避免影响现有分红与金库交互。</p>
+          </div>
+        </div>
+      </section>
+      ) : null}
+
+      {route === "mall" ? (
+      <section id="mall" className="section portal-section">
+        <div className="section-head">
+          <span>06 / 生态商城</span>
+          <h2>GoldAge 商城</h2>
+          <p>面向 GoldAge 社区的权益兑换、生态周边和 RWA 叙事扩展入口。</p>
+        </div>
+        <div className="portal-grid">
+          <div className="portal-panel coming-soon">
+            <div className="portal-icon"><ShoppingBag size={34} /></div>
+            <span>Coming Soon</span>
+            <h3>商城模块待开发</h3>
+            <p>后续将根据社区建设进度，上线权益兑换、活动凭证与合作资源展示。</p>
+          </div>
+          <div className="portal-panel">
+            <span>定位</span>
+            <h3>从持有权益到生态消费</h3>
+            <p>商城不会替代链上金库功能，而是作为 GoldAge 生态应用层的补充。</p>
+          </div>
+        </div>
+      </section>
+      ) : null}
+
+      {route === "cooperation" ? (
+      <section id="cooperation" className="section cooperation-section">
+        <div className="section-head">
+          <span>07 / 商务合作</span>
+          <h2>合作联系</h2>
+          <p>欢迎社区、媒体、RWA 资源、交易生态和商务渠道与 GoldAge 官方团队联系。</p>
+        </div>
+        <div className="contact-grid">
+          <a className="contact-card" href="https://x.com/Flaphjsd" target="_blank" rel="noreferrer">
+            <Handshake size={24} />
+            <span>官方推特</span>
+            <strong>@Flaphjsd</strong>
+            <ArrowUpRight size={18} />
+          </a>
+          <a className="contact-card" href="https://t.me/huangjinshidai1" target="_blank" rel="noreferrer">
+            <Users size={24} />
+            <span>电报群</span>
+            <strong>t.me/huangjinshidai1</strong>
+            <ArrowUpRight size={18} />
+          </a>
+          <div className="contact-card">
+            <Users size={24} />
+            <span>QQ群</span>
+            <strong>133603900</strong>
+          </div>
+          <a className="contact-card" href="https://m.debox.pro/group?id=w6aehsyg&code=kvouocdd" target="_blank" rel="noreferrer">
+            <Sparkles size={24} />
+            <span>DeBox</span>
+            <strong>GoldAge 社区</strong>
+            <ArrowUpRight size={18} />
+          </a>
+          <a className="contact-card featured" href="https://t.me/Dev_Astral" target="_blank" rel="noreferrer">
+            <Wallet size={24} />
+            <span>合作联系 TG</span>
+            <strong>@Dev_Astral</strong>
+            <ArrowUpRight size={18} />
+          </a>
+        </div>
+      </section>
+      ) : null}
+
       <footer>
         <span className="brand mini"><img className="brand-mark image" src={UI.brand} alt="" /> GoldAge</span>
-        <span>GoldAge Official DApp · Built on BNB Smart Chain</span>
+        <span>日久见金，越持越赢 · Built on BNB Smart Chain</span>
       </footer>
 
       <ToastContainer toasts={toasts} onClose={close} />

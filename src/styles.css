@@ -3250,6 +3250,13 @@ main::after {
   line-height: 1.85;
 }
 
+.hero-slogan {
+  margin: 14px auto 0;
+  color: #ffe074;
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 800;
+}
+
 .hero .hero-proof-row {
   justify-content: center;
   margin-top: 28px;
@@ -3342,5 +3349,204 @@ main::after {
   .hero .action {
     flex: 1 1 150px;
     min-width: 0;
+  }
+}
+
+/* New ecosystem pages */
+.topbar nav {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.topbar nav::-webkit-scrollbar {
+  display: none;
+}
+
+.topbar nav a {
+  white-space: nowrap;
+}
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.72fr);
+  gap: 18px;
+}
+
+.portal-panel,
+.contact-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(240, 189, 58, 0.22);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.078), rgba(255, 255, 255, 0.014)),
+    linear-gradient(180deg, rgba(240, 189, 58, 0.055), rgba(98, 216, 196, 0.02)),
+    var(--bg-panel);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 -1px 0 rgba(240, 189, 58, 0.08),
+    0 24px 70px rgba(0, 0, 0, 0.32);
+}
+
+.portal-panel {
+  min-height: 320px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.portal-panel::before,
+.contact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(240, 189, 58, 0.2), transparent 30%),
+    repeating-linear-gradient(90deg, rgba(255, 232, 164, 0.045) 0 1px, transparent 1px 74px);
+  opacity: 0.55;
+}
+
+.portal-panel > *,
+.contact-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.portal-icon {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  margin-bottom: auto;
+  border: 1px solid rgba(255, 232, 164, 0.2);
+  border-radius: 8px;
+  color: #ffe074;
+  background: rgba(240, 189, 58, 0.08);
+}
+
+.portal-panel span,
+.contact-card span {
+  color: var(--ink-dim);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.portal-panel h3 {
+  margin: 12px 0 10px;
+  color: #fff4d1;
+  font-size: clamp(30px, 3vw, 46px);
+  line-height: 1.05;
+}
+
+.portal-panel p {
+  max-width: 620px;
+  margin: 0;
+  color: #d6ccb6;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.coming-soon {
+  min-height: 390px;
+}
+
+.coming-soon::after {
+  content: "待开发";
+  position: absolute;
+  right: 26px;
+  top: 24px;
+  z-index: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 232, 164, 0.2);
+  border-radius: 999px;
+  color: #ffe074;
+  background: rgba(240, 189, 58, 0.08);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.contact-card {
+  min-height: 132px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px 16px;
+  text-decoration: none;
+}
+
+.contact-card > span,
+.contact-card > strong {
+  grid-column: 2;
+}
+
+.contact-card > svg:first-child {
+  grid-row: 1 / span 2;
+  color: #ffe074;
+}
+
+.contact-card > svg:last-child {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  color: var(--gold);
+}
+
+.contact-card strong {
+  overflow-wrap: anywhere;
+  color: #fff4d1;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.contact-card.featured {
+  grid-column: 1 / -1;
+  min-height: 154px;
+  border-color: rgba(255, 232, 164, 0.38);
+  background:
+    linear-gradient(135deg, rgba(240, 189, 58, 0.18), rgba(255, 255, 255, 0.02)),
+    var(--bg-panel);
+}
+
+@media (max-width: 1020px) {
+  .topbar nav {
+    justify-content: flex-start;
+  }
+
+  .portal-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar nav {
+    width: 100%;
+  }
+
+  .portal-panel {
+    min-height: 260px;
+    padding: 22px;
+  }
+
+  .coming-soon {
+    min-height: 310px;
+  }
+
+  .contact-card {
+    min-height: 116px;
+    padding: 18px;
+  }
+
+  .contact-card strong {
+    font-size: 18px;
   }
 }
