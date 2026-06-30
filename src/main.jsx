@@ -53,15 +53,32 @@ const ADDRESSES = {
   dead: "0x000000000000000000000000000000000000dEaD",
 };
 
+const FOUNDATION_ADDRESS = "0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8";
+
 const ROUTES = [
   { id: "home", label: "首页", hash: "#/" },
+  { id: "tokenomics", label: "Tokenomics", hash: "#/tokenomics" },
+  { id: "foundation", label: "Foundation", hash: "#/foundation" },
+  { id: "roadmap", label: "Roadmap", hash: "#/roadmap" },
   { id: "vault", label: "金库", hash: "#/vault" },
+  { id: "faq", label: "FAQ", hash: "#/faq" },
+  { id: "community", label: "Community", hash: "#/community" },
   { id: "mechanism", label: "机制", hash: "#/mechanism" },
   { id: "data", label: "数据", hash: "#/data" },
   { id: "contracts", label: "合约", hash: "#/contracts" },
   { id: "game", label: "游戏", hash: "#/game" },
   { id: "mall", label: "商城", hash: "#/mall" },
   { id: "cooperation", label: "商务合作", hash: "#/cooperation" },
+];
+
+const NAV_ITEMS = [
+  { id: "home", label: "首页", hash: "#/" },
+  { id: "tokenomics", label: "Tokenomics", hash: "#/tokenomics" },
+  { id: "foundation", label: "Foundation", hash: "#/foundation" },
+  { id: "roadmap", label: "Roadmap", hash: "#/roadmap" },
+  { id: "vault", label: "Stake", hash: "#/vault" },
+  { id: "faq", label: "FAQ", hash: "#/faq" },
+  { id: "community", label: "Community", hash: "#/community" },
 ];
 
 const UI = {
@@ -795,6 +812,287 @@ function StakeRingChart({ staked, total, title = "质押占比" }) {
   );
 }
 
+function CoreMetrics({ data, navigate }) {
+  const tvl = data ? data.totalStaked * data.price : null;
+  const metrics = [
+    {
+      label: "TVL",
+      value: "--",
+      rawValue: data ? tvl : null,
+      formatValue: (value) => formatUsd(value, 0),
+      sub: data ? `${formatFull(data.totalStaked, 0)} 黄金時代 staked` : "Vault live",
+    },
+    {
+      label: "Gold Reserve",
+      value: "--",
+      rawValue: data ? data.xautBalance : null,
+      formatValue: (value) => `${formatFull(value, 4)} XAUt`,
+      sub: "Vault reserve balance",
+    },
+    {
+      label: "Dividend Paid",
+      value: "--",
+      rawValue: data ? data.xautDistributed : null,
+      formatValue: (value) => `${formatFull(value, 4)} XAUt`,
+      sub: "Realtime + staking claimed",
+    },
+    {
+      label: "Holders",
+      value: "BscScan",
+      sub: "链上持有人以浏览器为准",
+      action: () => window.open(`${EXPLORER}${ADDRESSES.goldage}`, "_blank", "noreferrer"),
+    },
+  ];
+
+  return (
+    <section className="institutional-section metric-section">
+      <div className="section-kicker">Protocol Data</div>
+      <div className="institutional-head">
+        <h2>核心数据，链上实时校验</h2>
+        <p>以 BNB Chain、Pancake Router 与 Vault 合约读数为基础，展示协议运行状态、黄金储备与分红沉淀。</p>
+      </div>
+      <div className="institutional-metrics">
+        {metrics.map((item) => (
+          <button
+            key={item.label}
+            className="metric-tile"
+            type="button"
+            onClick={item.action || (() => navigate("data"))}
+          >
+            <span>{item.label}</span>
+            <strong>
+              {Number.isFinite(Number(item.rawValue)) ? (
+                <AnimatedNumber value={item.rawValue} format={item.formatValue} />
+              ) : (
+                item.value
+              )}
+            </strong>
+            <small>{item.sub}</small>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TokenomicsSection({ data, compact = false }) {
+  return (
+    <section className={`institutional-section tokenomics-section${compact ? " route-section" : ""}`}>
+      <div className="section-kicker">Tokenomics</div>
+      <div className="institutional-head split">
+        <div>
+          <h2>3% 交易税，流向透明</h2>
+          <p>每一笔交易都进入清晰的协议分配结构：90% 进入黄金 RWA 分红，10% 用于自动回购护盘。</p>
+        </div>
+        <div className="oversized-number">
+          <strong>3%</strong>
+          <span>Buy / Sell Tax</span>
+        </div>
+      </div>
+      <div className="flow-diagram">
+        <div className="flow-node source">
+          <span>Trade Tax</span>
+          <strong>3%</strong>
+        </div>
+        <div className="flow-branch">
+          <div className="flow-node gold">
+            <span>Gold Dividend</span>
+            <strong>90%</strong>
+            <small>50% 实时分红 + 40% 质押分红</small>
+          </div>
+          <div className="flow-node defense">
+            <span>Buyback Defense</span>
+            <strong>10%</strong>
+            <small>回购护盘与流动性防守</small>
+          </div>
+        </div>
+      </div>
+      <div className="tokenomics-mini-grid">
+        <div>
+          <span>Total Supply</span>
+          <strong>{data ? formatFull(data.total, 0) : "--"}</strong>
+        </div>
+        <div>
+          <span>Burned</span>
+          <strong>{data ? formatFull(data.burned, 0) : "--"}</strong>
+        </div>
+        <div>
+          <span>Buyback Count</span>
+          <strong>{data ? data.buybackCount : "--"}</strong>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DividendSection({ data }) {
+  return (
+    <section className="institutional-section dividend-section">
+      <div className="section-kicker">RWA Gold Dividend</div>
+      <div className="institutional-head">
+        <h2>黄金分红双通道</h2>
+        <p>持有即分与质押复利并行，让时间成为收益权重的核心变量。</p>
+      </div>
+      <div className="dividend-grid">
+        <div className="glass-feature">
+          <span>Realtime Dividend</span>
+          <h3>50% 实时分红</h3>
+          <p>面向持有者的实时分红通道，强调持续持有和透明结算。</p>
+        </div>
+        <div className="glass-feature">
+          <span>Staking Compound</span>
+          <h3>40% 质押复利</h3>
+          <p>通过 Vault 质押提升权重，时间越长，分红权重越高。</p>
+        </div>
+        <div className="glass-feature highlight">
+          <span>Vault Balance</span>
+          <h3>{data ? `${formatFull(data.xautBalance, 6)} XAUt` : "--"}</h3>
+          <p>当前金库黄金资产余额，来自链上合约实时读取。</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StakingLadderSection({ navigate }) {
+  const levels = [
+    { label: "0D+", value: "1x" },
+    { label: "5D+", value: "1.5x" },
+    { label: "10D+", value: "2x" },
+    { label: "15D+", value: "3x", crown: true },
+  ];
+  return (
+    <section className="institutional-section ladder-section">
+      <div className="section-kicker">Time Weighted Staking</div>
+      <div className="institutional-head split">
+        <div>
+          <h2>时间权重，四层黄金阶梯</h2>
+          <p>质押时间越长，权重越高。最高进入 3 倍收益权重区间。</p>
+        </div>
+        <button className="action primary" type="button" onClick={() => navigate("vault")}>
+          <LockKeyhole size={18} />
+          Stake Now
+        </button>
+      </div>
+      <div className="gold-ladder">
+        {levels.map((level, index) => (
+          <div key={level.value} className={`ladder-step step-${index + 1}`}>
+            <span>{level.label}</span>
+            <strong>{level.value}</strong>
+            {level.crown ? <small>皇冠权重</small> : <small>Time lock</small>}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FoundationSection() {
+  return (
+    <section className="institutional-section foundation-section">
+      <div className="section-kicker">Foundation</div>
+      <div className="foundation-layout">
+        <div className="institutional-head">
+          <h2>基金会与链上可信地址</h2>
+          <p>基金会地址、核心合约与官方社群统一展示，帮助用户识别官方信息入口。</p>
+        </div>
+        <a className="foundation-address" href={`${EXPLORER}${FOUNDATION_ADDRESS}`} target="_blank" rel="noreferrer">
+          <span>Foundation Address</span>
+          <strong>{FOUNDATION_ADDRESS}</strong>
+          <ArrowUpRight size={18} />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function RoadmapSection() {
+  const items = [
+    ["Phase 01", "BNB Chain 部署", "代币、Vault、Router、数据面板上线"],
+    ["Phase 02", "RWA 分红叙事", "完善黄金分红、回购护盘与质押权重"],
+    ["Phase 03", "生态扩展", "游戏、商城、社区任务与合作资源接入"],
+    ["Phase 04", "国际化品牌", "面向 RWA、交易生态和机构合作扩张"],
+  ];
+  return (
+    <section className="institutional-section roadmap-section">
+      <div className="section-kicker">Roadmap</div>
+      <div className="institutional-head">
+        <h2>从链上协议到黄金生态</h2>
+        <p>路线图聚焦可验证合约、RWA 叙事、社区生态和国际化合作。</p>
+      </div>
+      <div className="roadmap-line">
+        {items.map(([phase, title, text]) => (
+          <div key={phase} className="roadmap-card">
+            <span>{phase}</span>
+            <strong>{title}</strong>
+            <p>{text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const faqs = [
+    ["黄金時代是什么？", "黄金時代是一个以真实黄金 RWA 为支撑的去中心化分红协议，GoldAge 只是英文简译。"],
+    ["分红如何产生？", "项目采用 3% 买卖税机制，其中 90% 用于黄金 RWA 分红，10% 用于回购护盘。"],
+    ["质押有什么作用？", "质押时间越长，权重越高，最高可享 3 倍收益权重。"],
+    ["数据是否真实？", "页面中的价格、金库余额、质押数量等核心数据均通过 BSC RPC 与合约实时读取。"],
+  ];
+  return (
+    <section className="institutional-section faq-section">
+      <div className="section-kicker">FAQ</div>
+      <div className="institutional-head">
+        <h2>常见问题</h2>
+        <p>减少复杂解释，保留用户最关心的协议逻辑与安全边界。</p>
+      </div>
+      <div className="faq-grid">
+        {faqs.map(([q, a]) => (
+          <details key={q} className="faq-item">
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CommunitySection() {
+  return (
+    <section className="institutional-section community-section">
+      <div className="section-kicker">Community</div>
+      <div className="institutional-head">
+        <h2>官方社区与商务合作</h2>
+        <p>请以以下入口为官方信息来源，谨防非官方渠道。</p>
+      </div>
+      <div className="community-links">
+        <a href="https://x.com/Flaphjsd" target="_blank" rel="noreferrer">Twitter @Flaphjsd</a>
+        <a href="https://t.me/huangjinshidai1" target="_blank" rel="noreferrer">Telegram 群</a>
+        <span>QQ群 133603900</span>
+        <a href="https://m.debox.pro/group?id=w6aehsyg&code=kvouocdd" target="_blank" rel="noreferrer">DeBox 社区</a>
+        <a href="https://t.me/Dev_Astral" target="_blank" rel="noreferrer">合作 TG @Dev_Astral</a>
+      </div>
+    </section>
+  );
+}
+
+function InstitutionalHome({ data, navigate }) {
+  return (
+    <>
+      <CoreMetrics data={data} navigate={navigate} />
+      <TokenomicsSection data={data} />
+      <DividendSection data={data} />
+      <StakingLadderSection navigate={navigate} />
+      <FoundationSection />
+      <RoadmapSection />
+      <FAQSection />
+      <CommunitySection />
+    </>
+  );
+}
+
 // ===== 质押流程引导 Stepper =====
 function buildSteps(user, data, parsedStakeAmount, hasStakeAllowance) {
   if (!data) return [];
@@ -1011,6 +1309,7 @@ function App() {
   const [busy, setBusy] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [route, setRoute] = useState(getRouteFromHash);
+  const [scrolled, setScrolled] = useState(false);
 
   // 图表与市场数据
   const [priceHistory, setPriceHistory] = useState(null);
@@ -1019,6 +1318,13 @@ function App() {
   const [chartLoading, setChartLoading] = useState(false);
 
   const { toasts, notify, close } = useToast();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 28);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const contracts = useMemo(
     () => ({
@@ -1508,14 +1814,14 @@ function App() {
 
   return (
     <main>
-      <header className="topbar">
+      <header className={`topbar${scrolled ? " scrolled" : ""}`}>
         <a className="brand" href="#/">
           <img className="brand-mark image" src={UI.brand} alt="" />
           <span>黄金時代</span>
           <small>GoldAge · 简译</small>
         </a>
         <nav>
-          {ROUTES.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <a key={item.id} className={route === item.id ? "active" : ""} href={item.hash}>
               {item.label}
             </a>
@@ -1550,23 +1856,27 @@ function App() {
         <HeroArt trend={priceHistory} />
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">黄金時代 · GoldAge</p>
-            <h1>时间就是黄金</h1>
-            <p className="lead">一个“时间换黄金”的加密分红协议。以真实黄金 RWA 为支撑，持有即享黄金分红，质押时间越长权重越高。</p>
-            <p className="hero-slogan">日久见金，越持越赢。</p>
+            <p className="eyebrow">RWA Gold Dividend Protocol</p>
+            <h1>黄金時代 <span>GoldAge</span></h1>
+            <p className="lead">一个“时间换黄金”的加密分红协议，以真实黄金 RWA 为支撑，让持有、质押与回购防守构成长期价值闭环。</p>
+            <p className="hero-slogan">时间就是黄金，持有铸就时代。</p>
             <div className="hero-proof-row">
               <span><Zap size={15} /> <strong>3%</strong> 买卖税</span>
               <span><Gem size={15} /> <strong>90%</strong> 黄金分红</span>
               <span><ShieldCheck size={15} /> <strong>10%</strong> 回购防守</span>
             </div>
             <div className="hero-buttons">
-              <button className="action primary" onClick={() => navigate("vault")}>
-                <LockKeyhole size={18} />
-                立即质押
+              <button className="action primary breathing" onClick={connectWallet} disabled={busy}>
+                <Wallet size={18} />
+                Connect Wallet
               </button>
-              <button className="action" onClick={() => navigate("cooperation")}>
-                <Handshake size={18} />
-                商务合作
+              <button className="action" onClick={() => navigate("foundation")}>
+                <BookOpen size={18} />
+                Whitepaper
+              </button>
+              <button className="action" onClick={() => navigate("contracts")}>
+                <ShieldCheck size={18} />
+                Audit
               </button>
             </div>
             <div className="hero-live-strip">
@@ -1593,29 +1903,21 @@ function App() {
               </a>
             ) : null}
           </div>
-          <div className="stats-grid">
-            {data
-              ? cards.map((card, i) => (
-                  <Reveal key={card.label} delay={i * 60}>
-                    <StatCard {...card} />
-                  </Reveal>
-                ))
-              : Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-          </div>
-          <div className="hero-buttons">
-            <ActionButton icon={Landmark} primary onClick={() => navigate("vault")}>
-              进入金库
-            </ActionButton>
-            <ActionButton icon={BarChart3} onClick={() => navigate("data")}>
-              查看数据
-            </ActionButton>
-            <ActionButton icon={BookOpen} onClick={() => navigate("mechanism")}>
-              协议介绍
-            </ActionButton>
-          </div>
         </div>
       </section>
       ) : null}
+
+      {route === "home" ? <InstitutionalHome data={data} navigate={navigate} /> : null}
+
+      {route === "tokenomics" ? <TokenomicsSection data={data} compact /> : null}
+
+      {route === "foundation" ? <FoundationSection /> : null}
+
+      {route === "roadmap" ? <RoadmapSection /> : null}
+
+      {route === "faq" ? <FAQSection /> : null}
+
+      {route === "community" ? <CommunitySection /> : null}
 
       {route === "vault" ? (
       <section id="vault" className="section vault-section">
@@ -1998,10 +2300,10 @@ function App() {
             <strong>黄金時代社区</strong>
             <ArrowUpRight size={18} />
           </a>
-          <a className="contact-card featured foundation-card" href={`${EXPLORER}0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8`} target="_blank" rel="noreferrer">
+          <a className="contact-card featured foundation-card" href={`${EXPLORER}${FOUNDATION_ADDRESS}`} target="_blank" rel="noreferrer">
             <Landmark size={24} />
             <span>基金会地址</span>
-            <strong>0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8</strong>
+            <strong>{FOUNDATION_ADDRESS}</strong>
             <ArrowUpRight size={18} />
           </a>
           <a className="contact-card featured" href="https://t.me/Dev_Astral" target="_blank" rel="noreferrer">
@@ -2014,9 +2316,24 @@ function App() {
       </section>
       ) : null}
 
-      <footer>
-        <span className="brand mini"><img className="brand-mark image" src={UI.brand} alt="" /> 黄金時代 <small>GoldAge</small></span>
-        <span>日久见金，越持越赢 · Built on BNB Smart Chain</span>
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <span className="brand mini"><img className="brand-mark image" src={UI.brand} alt="" /> 黄金時代 <small>GoldAge</small></span>
+          <p>一个“时间换黄金”的 RWA 加密分红协议。日久见金，越持越赢。</p>
+        </div>
+        <div className="footer-links">
+          <button type="button" onClick={() => navigate("foundation")}>Foundation</button>
+          <button type="button" onClick={() => navigate("foundation")}>Whitepaper</button>
+          <button type="button" onClick={() => navigate("contracts")}>Audit</button>
+          <a href="https://x.com/Flaphjsd" target="_blank" rel="noreferrer">Twitter</a>
+          <a href="https://t.me/huangjinshidai1" target="_blank" rel="noreferrer">Telegram</a>
+          <a href="https://github.com/ybc112/Goldage" target="_blank" rel="noreferrer">GitHub</a>
+          <a href={`${EXPLORER}${ADDRESSES.goldage}`} target="_blank" rel="noreferrer">BNB Chain</a>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 黄金時代 GoldAge</span>
+          <span>Built on BNB Smart Chain</span>
+        </div>
       </footer>
 
       <ToastContainer toasts={toasts} onClose={close} />
