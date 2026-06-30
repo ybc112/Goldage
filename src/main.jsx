@@ -1545,13 +1545,23 @@ function App() {
         <HeroArt trend={priceHistory} />
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">GoldAge Official Protocol · BNB Smart Chain</p>
-            <h1>黄金时代 GoldAge</h1>
-            <p className="lead">围绕 GoldAge、XAUt 分红、链上质押和回购防守构建的链上金库型 DeFi DApp。</p>
+            <p className="eyebrow">GoldAge · RWA Dividend Protocol</p>
+            <h1>时间就是黄金</h1>
+            <p className="lead">以黄金资产为核心，以链上透明机制为基础，打造持有即分、质押增权、回购防守的长期价值协议。</p>
             <div className="hero-proof-row">
-              <span><ShieldCheck size={15} /> 合约实时读数</span>
-              <span><Gem size={15} /> XAUt 分红</span>
-              <span><LockKeyhole size={15} /> 金库质押</span>
+              <span><Zap size={15} /> <strong>3%</strong> 买卖税</span>
+              <span><Gem size={15} /> <strong>90%</strong> 黄金分红</span>
+              <span><ShieldCheck size={15} /> <strong>10%</strong> 回购防守</span>
+            </div>
+            <div className="hero-buttons">
+              <button className="action primary" onClick={() => navigate("vault")}>
+                <LockKeyhole size={18} />
+                立即质押
+              </button>
+              <button className="action" onClick={() => navigate("mechanism")}>
+                <BookOpen size={18} />
+                查看机制
+              </button>
             </div>
             <div className="hero-live-strip">
               <div>
