@@ -3550,3 +3550,75 @@ main::after {
     font-size: 18px;
   }
 }
+
+/* Mobile and data visual refinements */
+.ring-card {
+  min-height: 310px;
+  padding: 42px 18px 22px;
+}
+
+.ring-card svg {
+  width: min(100%, 330px);
+  height: 230px;
+}
+
+.ring-bg,
+.ring-fg {
+  stroke-width: 20;
+}
+
+.ring-fg {
+  transform-origin: 130px 92px;
+}
+
+.ring-text {
+  fill: #fff6d8;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.ring-sub {
+  fill: #cfc5ae;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.foundation-card strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.hero .generated-hero-art {
+  opacity: 0.42;
+}
+
+@media (max-width: 1020px) {
+  .hero .generated-hero-art {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ring-card {
+    min-height: 330px;
+    padding-top: 48px;
+  }
+
+  .ring-card svg {
+    width: min(100%, 300px);
+    height: 240px;
+  }
+
+  .ring-text {
+    font-size: 31px;
+  }
+
+  .ring-sub {
+    font-size: 13px;
+  }
+
+  .foundation-card strong {
+    font-size: 14px;
+  }
+}

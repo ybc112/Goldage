@@ -770,26 +770,24 @@ function VaultTrendChart({ points, title = "金库质押趋势 (7天)", height =
 function StakeRingChart({ staked, total, title = "质押占比" }) {
   const safeTotal = total > 0 ? total : 1;
   const pct = Math.max(0, Math.min(100, (staked / safeTotal) * 100));
-  const r = 42;
-  const circ = 2 * Math.PI * r;
-  const dash = (pct / 100) * circ;
+  const r = 58;
   return (
     <div className="chart-card ring-card">
       <span className="chart-title">{title}</span>
-      <svg viewBox="0 0 240 130" role="img" aria-label={title}>
-        <circle className="ring-bg" cx="120" cy="70" r={r} />
+      <svg viewBox="0 0 260 180" role="img" aria-label={title}>
+        <circle className="ring-bg" cx="130" cy="92" r={r} />
         <circle
           className="ring-fg"
-          cx="120"
-          cy="70"
+          cx="130"
+          cy="92"
           r={r}
           pathLength={100}
           style={{ strokeDasharray: `${pct} ${100 - pct}` }}
         />
-        <text x="120" y="68" textAnchor="middle" className="ring-text">
+        <text x="130" y="90" textAnchor="middle" className="ring-text">
           {pct.toFixed(2)}%
         </text>
-        <text x="120" y="86" textAnchor="middle" className="ring-sub">
+        <text x="130" y="112" textAnchor="middle" className="ring-sub">
           {formatFull(staked, 0)} / {formatFull(total, 0)}
         </text>
       </svg>
@@ -1998,6 +1996,12 @@ function App() {
             <Sparkles size={24} />
             <span>DeBox</span>
             <strong>GoldAge 社区</strong>
+            <ArrowUpRight size={18} />
+          </a>
+          <a className="contact-card featured foundation-card" href={`${EXPLORER}0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8`} target="_blank" rel="noreferrer">
+            <Landmark size={24} />
+            <span>基金会地址</span>
+            <strong>0x3eaef0428a1cde7d6fb6fc33bacf3aa06bcd8ff8</strong>
             <ArrowUpRight size={18} />
           </a>
           <a className="contact-card featured" href="https://t.me/Dev_Astral" target="_blank" rel="noreferrer">
