@@ -73,12 +73,14 @@ const ROUTES = [
 
 const NAV_ITEMS = [
   { id: "home", label: "首页", hash: "#/" },
-  { id: "tokenomics", label: "Tokenomics", hash: "#/tokenomics" },
-  { id: "foundation", label: "Foundation", hash: "#/foundation" },
-  { id: "roadmap", label: "Roadmap", hash: "#/roadmap" },
-  { id: "vault", label: "Stake", hash: "#/vault" },
-  { id: "faq", label: "FAQ", hash: "#/faq" },
-  { id: "community", label: "Community", hash: "#/community" },
+  { id: "data", label: "数据", hash: "#/data" },
+  { id: "tokenomics", label: "机制", hash: "#/tokenomics" },
+  { id: "foundation", label: "基金会", hash: "#/foundation" },
+  { id: "vault", label: "质押", hash: "#/vault" },
+  { id: "game", label: "游戏", hash: "#/game" },
+  { id: "mall", label: "商城", hash: "#/mall" },
+  { id: "roadmap", label: "路线图", hash: "#/roadmap" },
+  { id: "community", label: "社区", hash: "#/community" },
 ];
 
 const UI = {
@@ -171,6 +173,14 @@ function toNumber(value, decimals = 18) {
 function formatFull(value, digits = 2) {
   if (!Number.isFinite(value)) return "--";
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value);
+}
+
+function formatCompact(value, digits = 1) {
+  if (!Number.isFinite(value)) return "--";
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: digits,
+  }).format(value);
 }
 
 function formatUsd(value, digits = 0) {
@@ -812,34 +822,137 @@ function StakeRingChart({ staked, total, title = "质押占比" }) {
   );
 }
 
+function MarketTerminal({ data, dexData, trend }) {
+  let pathD = "M0 92 C40 76,70 82,105 62 S170 42,210 56 S275 78,315 45 S390 18,430 34 S485 58,520 24";
+  let areaD = `${pathD} L520 120 L0 120 Z`;
+
+  if (trend && trend.length >= 2) {
+    const prices = trend.map((point) => point.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const range = max - min || 1;
+    const step = 520 / (trend.length - 1);
+    const points = trend.map((point, index) => {
+      const x = index * step;
+      const y = 94 - ((point.price - min) / range) * 62;
+      return [x, y];
+    });
+    pathD = points.map(([x, y], index) => `${index === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+    areaD = `${pathD} L520 120 L0 120 Z`;
+  }
+
+  const price = dexData?.priceUsd || data?.price || 0;
+  const change = dexData?.priceChange?.h24;
+  const priceLabel = price ? `$${price < 0.01 ? price.toFixed(8) : price.toFixed(4)}` : "--";
+  const changeLabel = change == null ? "LIVE" : `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
+  const dividendPool = data ? `${formatFull(data.xautBalance, 4)} XAUt` : "--";
+  const staking = data ? formatCompact(data.totalStaked, 1) : "--";
+  const burned = data ? formatCompact(data.burned, 2) : "--";
+  const buyback = data ? formatUsd(data.buybackAvailable, 2) : "--";
+
+  return (
+    <aside className="market-terminal" aria-label="GoldAge Market Terminal">
+      <div className="terminal-head">
+        <h3>GoldAge Market Terminal</h3>
+        <span className="live-chip">{changeLabel}</span>
+      </div>
+      <div className="terminal-price-box">
+        <div className="terminal-price-row">
+          <div>
+            <span>黄金時代 / USDT</span>
+            <strong>{priceLabel}</strong>
+          </div>
+          {change != null && (
+            <small className={change >= 0 ? "positive" : "negative"}>
+              {changeLabel}
+            </small>
+          )}
+        </div>
+        <div className="terminal-chart">
+          <svg viewBox="0 0 520 120" preserveAspectRatio="none" role="img" aria-label="黄金時代价格走势">
+            <path className="terminal-area" d={areaD} />
+            <path className="terminal-line" d={pathD} />
+          </svg>
+        </div>
+      </div>
+      <div className="terminal-kpis">
+        <div>
+          <span>黄金分红池</span>
+          <strong>{dividendPool}</strong>
+        </div>
+        <div>
+          <span>当前质押量</span>
+          <strong>{staking}</strong>
+        </div>
+        <div>
+          <span>累计销毁</span>
+          <strong>{burned}</strong>
+        </div>
+        <div>
+          <span>回购防守池</span>
+          <strong>{buyback}</strong>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
 function CoreMetrics({ data, navigate }) {
   const tvl = data ? data.totalStaked * data.price : null;
   const metrics = [
     {
-      label: "TVL",
+      icon: "MC",
+      label: "当前市值 · Market Cap",
       value: "--",
-      rawValue: data ? tvl : null,
+      rawValue: data ? data.marketCap : null,
       formatValue: (value) => formatUsd(value, 0),
-      sub: data ? `${formatFull(data.totalStaked, 0)} 黄金時代 staked` : "Vault live",
+      sub: data ? `FDV ${formatUsd(data.fdv, 0)}` : "On-chain pricing",
+      badge: "Live",
     },
     {
-      label: "Gold Reserve",
+      icon: "Au",
+      label: "黄金分红池 · Gold Pool",
       value: "--",
       rawValue: data ? data.xautBalance : null,
       formatValue: (value) => `${formatFull(value, 4)} XAUt`,
       sub: "Vault reserve balance",
+      badge: "+",
     },
     {
-      label: "Dividend Paid",
+      icon: "50%",
+      label: "实时分红池 · Real-Time",
       value: "--",
-      rawValue: data ? data.xautDistributed : null,
+      rawValue: data ? data.realtimeDeposited : null,
       formatValue: (value) => `${formatFull(value, 4)} XAUt`,
-      sub: "Realtime + staking claimed",
+      sub: data ? `Claimed ${formatFull(data.realtimeClaimed, 4)} XAUt` : "Realtime channel",
+      badge: "Live",
     },
     {
-      label: "Holders",
-      value: "BscScan",
-      sub: "链上持有人以浏览器为准",
+      icon: "40%",
+      label: "质押分红池 · Staking",
+      value: "--",
+      rawValue: data ? data.stakingDeposited : null,
+      formatValue: (value) => `${formatFull(value, 4)} XAUt`,
+      sub: data ? `Paid ${formatFull(data.stakingPaid, 4)} XAUt` : "Vault channel",
+      badge: "Stake",
+    },
+    {
+      icon: "TVL",
+      label: "总质押量 · Total Staked",
+      value: "--",
+      rawValue: data ? data.totalStaked : null,
+      formatValue: (value) => formatCompact(value, 1),
+      sub: data ? `${formatUsd(tvl, 0)} TVL` : "Vault live",
+      badge: data ? `${((data.totalStaked / data.total) * 100).toFixed(2)}%` : "Live",
+    },
+    {
+      icon: "BRN",
+      label: "累计销毁 · Burned",
+      value: "--",
+      rawValue: data ? data.burned : null,
+      formatValue: (value) => formatFull(value, 0),
+      sub: data ? `${((data.burned / data.total) * 100).toFixed(2)}% supply` : "Burn status",
+      badge: "Burn",
       action: () => window.open(`${EXPLORER}${ADDRESSES.goldage}`, "_blank", "noreferrer"),
     },
   ];
@@ -855,10 +968,14 @@ function CoreMetrics({ data, navigate }) {
         {metrics.map((item) => (
           <button
             key={item.label}
-            className="metric-tile"
+            className="metric-tile exchange-metric"
             type="button"
             onClick={item.action || (() => navigate("data"))}
           >
+            <div className="metric-topline">
+              <b>{item.icon}</b>
+              <em>{item.badge}</em>
+            </div>
             <span>{item.label}</span>
             <strong>
               {Number.isFinite(Number(item.rawValue)) ? (
@@ -881,30 +998,41 @@ function TokenomicsSection({ data, compact = false }) {
       <div className="section-kicker">Tokenomics</div>
       <div className="institutional-head split">
         <div>
-          <h2>3% 交易税，流向透明</h2>
-          <p>每一笔交易都进入清晰的协议分配结构：90% 进入黄金 RWA 分红，10% 用于自动回购护盘。</p>
+          <h2>税费机制</h2>
+          <p>每一笔买卖都进入协议分配系统，形成黄金分红、质押收益与回购防守闭环。</p>
         </div>
         <div className="oversized-number">
           <strong>3%</strong>
           <span>Buy / Sell Tax</span>
         </div>
       </div>
-      <div className="flow-diagram">
-        <div className="flow-node source">
-          <span>Trade Tax</span>
-          <strong>3%</strong>
+      <div className="exchange-tax-grid">
+        <div className="tax-panel tax-gold">
+          <strong>90%</strong>
+          <h3>黄金分红池</h3>
+          <span>Gold Dividend Pool</span>
+          <div className="tax-subgrid">
+            <div>
+              <span>实时分红</span>
+              <b>50%</b>
+            </div>
+            <div>
+              <span>质押分红</span>
+              <b>40%</b>
+            </div>
+          </div>
         </div>
-        <div className="flow-branch">
-          <div className="flow-node gold">
-            <span>Gold Dividend</span>
-            <strong>90%</strong>
-            <small>50% 实时分红 + 40% 质押分红</small>
-          </div>
-          <div className="flow-node defense">
-            <span>Buyback Defense</span>
-            <strong>10%</strong>
-            <small>回购护盘与流动性防守</small>
-          </div>
+        <div className="tax-panel tax-core">
+          <strong>3%</strong>
+          <h3>买卖税</h3>
+          <span>Transaction Tax</span>
+          <p>交易价值进入协议分配系统，自动连接分红、质押与防守模块。</p>
+        </div>
+        <div className="tax-panel tax-defense">
+          <strong>10%</strong>
+          <h3>回购防守</h3>
+          <span>Buyback Defense</span>
+          <p>单日跌幅触发风控逻辑时，协议回购黄金時代并补充流动性。</p>
         </div>
       </div>
       <div className="tokenomics-mini-grid">
@@ -1817,8 +1945,8 @@ function App() {
       <header className={`topbar${scrolled ? " scrolled" : ""}`}>
         <a className="brand" href="#/">
           <img className="brand-mark image" src={UI.brand} alt="" />
-          <span>黄金時代</span>
-          <small>GoldAge · 简译</small>
+          <span>黄金時代 GoldAge</span>
+          <small>RWA Gold Dividend Protocol</small>
         </a>
         <nav>
           {NAV_ITEMS.map((item) => (
@@ -1853,30 +1981,30 @@ function App() {
       {route === "home" ? (
       <section id="home" className="hero">
         <div className="hero-bg" />
-        <HeroArt trend={priceHistory} />
-        <div className="hero-content">
+        <div className="hero-content exchange-hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">RWA Gold Dividend Protocol</p>
-            <h1>黄金時代 <span>GoldAge</span></h1>
-            <p className="lead">一个“时间换黄金”的加密分红协议，以真实黄金 RWA 为支撑，让持有、质押与回购防守构成长期价值闭环。</p>
+            <p className="eyebrow">BNB Smart Chain · RWA 黄金分红协议</p>
+            <h1>专业级黄金分红协议 <span>时间就是黄金</span></h1>
+            <p className="lead">黄金時代 GoldAge 通过 3% 交易税，将市场交易价值转化为黄金分红、质押收益与回购防守，构建更透明、更长期、更具资产属性的 RWA 加密协议。</p>
             <p className="hero-slogan">时间就是黄金，持有铸就时代。</p>
             <div className="hero-proof-row">
               <span><Zap size={15} /> <strong>3%</strong> 买卖税</span>
               <span><Gem size={15} /> <strong>90%</strong> 黄金分红</span>
               <span><ShieldCheck size={15} /> <strong>10%</strong> 回购防守</span>
+              <span><LockKeyhole size={15} /> <strong>3x</strong> 最高质押权重</span>
             </div>
             <div className="hero-buttons">
               <button className="action primary breathing" onClick={connectWallet} disabled={busy}>
                 <Wallet size={18} />
-                Connect Wallet
+                立即连接钱包
               </button>
-              <button className="action" onClick={() => navigate("foundation")}>
+              <button className="action" onClick={() => navigate("tokenomics")}>
                 <BookOpen size={18} />
-                Whitepaper
+                查看机制
               </button>
-              <button className="action" onClick={() => navigate("contracts")}>
-                <ShieldCheck size={18} />
-                Audit
+              <button className="action" onClick={() => navigate("vault")}>
+                <LockKeyhole size={18} />
+                进入质押
               </button>
             </div>
             <div className="hero-live-strip">
@@ -1893,16 +2021,17 @@ function App() {
                 <strong>{data?.upgradesLocked ? "已锁定" : "可查询"}</strong>
               </div>
             </div>
+            <div className="status-line">
+              <RefreshCw size={16} className={busy ? "spin" : ""} />
+              <span>{status}</span>
+              {txHash ? (
+                <a href={`${TX_EXPLORER}${txHash}`} target="_blank" rel="noreferrer">
+                  查看交易
+                </a>
+              ) : null}
+            </div>
           </div>
-          <div className="status-line">
-            <RefreshCw size={16} className={busy ? "spin" : ""} />
-            <span>{status}</span>
-            {txHash ? (
-              <a href={`${TX_EXPLORER}${txHash}`} target="_blank" rel="noreferrer">
-                查看交易
-              </a>
-            ) : null}
-          </div>
+          <MarketTerminal data={data} dexData={dexData} trend={priceHistory} />
         </div>
       </section>
       ) : null}
@@ -2233,7 +2362,7 @@ function App() {
         <div className="portal-grid">
           <div className="portal-panel coming-soon">
             <div className="portal-icon"><Gamepad2 size={34} /></div>
-            <span>Coming Soon</span>
+            <span>待开发</span>
             <h3>游戏模块待开发</h3>
             <p>后续将接入围绕黄金時代持有、质押权重与社区任务展开的互动玩法。</p>
           </div>
@@ -2256,7 +2385,7 @@ function App() {
         <div className="portal-grid">
           <div className="portal-panel coming-soon">
             <div className="portal-icon"><ShoppingBag size={34} /></div>
-            <span>Coming Soon</span>
+            <span>待开发</span>
             <h3>商城模块待开发</h3>
             <p>后续将根据社区建设进度，上线权益兑换、活动凭证与合作资源展示。</p>
           </div>
