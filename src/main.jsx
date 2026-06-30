@@ -2028,7 +2028,7 @@ function App() {
         <div className="hero-content exchange-hero-content">
           <div className="hero-copy">
             <p className="eyebrow">BNB Smart Chain · RWA 黄金分红协议</p>
-            <h1>专业级黄金分红协议 <span>时间就是黄金</span></h1>
+            <h1>黄金时代分红协议<br /><span>时间，是最大的杠杆</span></h1>
             <p className="lead">黄金時代 GoldAge 通过 3% 交易税，将市场交易价值转化为黄金分红、质押收益与回购防守，构建更透明、更长期、更具资产属性的 RWA 加密协议。</p>
             <p className="hero-slogan">时间就是黄金，持有铸就时代。</p>
             <div className="hero-proof-row">
